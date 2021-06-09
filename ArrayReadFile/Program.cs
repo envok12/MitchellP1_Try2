@@ -24,8 +24,7 @@ namespace MitchellP1
             double vol = 0.0;
             double temp = 0.0;
             double pressure = 0.0;
-            //double numberMoles = 0.0;
-            //double celsius = 0.0;
+            
 
             GetMolecularWeights(ref gasNames, ref molecularWeights, out count);
             

@@ -12,30 +12,65 @@ namespace MitchellP1
        {
             DisplayHeader();
 
-            string[] gasNames = new string[100];
-            double[] molecularWeights = new double[100];
-            int count = 0;
-            
-            string gasName = " ";
-            int countGases = 0;  
+            string another = " ";
+            do
+            {
+                
 
-            double mass = 0.0;
-            double molecularWeight = 0.0;
-            double vol = 0.0;
-            double temp = 0.0;
-            double pressure = 0.0;
-            
+                string[] gasNames = new string[100];
+                double[] molecularWeights = new double[100];
+                int count = 0;
 
-            GetMolecularWeights(ref gasNames, ref molecularWeights, out count);
-            
-            DisplayGasNames(gasNames, countGases);
+                string gasName = " ";
+                int countGases = 0;
+                double moleWeight = 0.0;
+                double mass = 0.0;
+                double molecularWeight = 0.0;
+                double vol = 0.0;
+                double temp = 0.0;
+                double pascals = 0.0;
 
-            GetMolecularWeightFromName(gasName, gasNames, molecularWeights, countGases);
 
-            Pressure(mass, vol, temp, molecularWeight);
 
-            DisplayPressure(pressure);
-            
+                GetMolecularWeights(ref gasNames, ref molecularWeights, out count);
+
+                DisplayGasNames(gasNames, countGases);
+
+                Console.WriteLine("Enter the gas name you would like to use.");
+                gasName = Console.ReadLine();
+
+                string searchString = gasName;
+                countGases = Array.IndexOf(gasNames, gasName);
+
+
+                if (gasNames.Contains(gasName))
+                {
+                   
+
+                    molecularWeight = GetMolecularWeightFromName(gasName, gasNames, molecularWeights, countGases);
+
+                    pascals = Pressure(mass, vol, temp, molecularWeight);
+
+                    DisplayPressure(pascals);
+                
+
+                    Console.WriteLine("Would you like to find the pressure of another gas? Please enter yes or no.");
+                    another = Console.ReadLine();
+
+                }
+                else
+                {
+                    Console.WriteLine("The name you entered is not on the list.");
+                     
+                    return;
+                }
+
+            } while (another == "yes");
+
+            Console.WriteLine("Have a nice day. Goodbye.");
+           
+
+
         }
 
 
@@ -73,13 +108,7 @@ namespace MitchellP1
             Console.WriteLine("The gas names are: ");
             Console.WriteLine($"{ " First Column",-25 }\t{ "Second Column",-25}\t{ "Third Column",-25}");
             Console.WriteLine($"{" _____________",-25}\t{"______________",-25}\t{"______________",-25}");
-            /*for (int i = 1; i < gasNames.Length; i++)
-            {
-                
-                //Console.WriteLine($"{ gasNames[(i)],-15}\t{ gasNames[(i + 1)],-15}\t{ gasNames[(i + 2)],-15}");
-                Console.WriteLine($"{ gasNames[(i + 3) % 3],-15}\t{ gasNames[(i + 4) % 6],-15}\t{ gasNames[(i + 5) % 9],-15}");
-            }
-            */
+
             for (int i = 1; i < gasNames.Length - 2; i += 3)
             {
                 
@@ -93,67 +122,46 @@ namespace MitchellP1
         private static double GetMolecularWeightFromName(string gasName, string[] gasNames, double[] molecularWeights, int countGases)
         {
 
-            double molecularWeight = 0.0;
             double moleWeight = 0.0;
             //fct looks up the name of a gas in an array and returns the mole weight the the gass in mols
+            Console.WriteLine("The gas name " + $"{ gasName }, is at index {countGases}. ");
+            moleWeight = molecularWeights[countGases];
+            Console.WriteLine("The molecular weight of your gas is " + $"{moleWeight}.");
 
-            Console.WriteLine("Enter the gas name you would like to use.");
-            gasName = Console.ReadLine();
-            
 
-            string searchString = gasName;
-            countGases = Array.IndexOf(gasNames, gasName);
 
-            if (gasNames.Contains(gasName))
-            {
-                Console.WriteLine("The gas name " + $"{ gasName }, is at index {countGases}. ");
-                moleWeight = molecularWeights[countGases];
-                Console.WriteLine("The molecular weight of your gas is " + $"{moleWeight}.");
-            }
-            else
-            {
-                Console.WriteLine("Sorry, that gas name is not on the list.");
-            }
-
-            molecularWeight = moleWeight; 
-            return molecularWeight; //not being returned? I can't figure this out. 
+            return moleWeight; 
         }
 
 
 
         static double Pressure(double mass, double vol, double temp, double molecularWeight)
         {
-            //mass = 0.0;
-            //vol = 0.0;
-            //temp = 0.0;
-            //molecularWeight = 0.0;
-            double pressure = 0.0;
+
+            double pascals = 0.0;
             double numberMoles = 0.0;
             const double r = 8.3145;            
             double kelvin = 0.0;
 
-            Console.WriteLine($"{molecularWeight}");
+            //Console.WriteLine($"Word{molecularWeight}");
 
             Console.WriteLine("Please enter the volume of your container in cubic meters: ");
             vol = Convert.ToDouble(Console.ReadLine());
 
             Console.WriteLine("Please enter the mass of the gas in grams: ");
             mass = Convert.ToDouble(Console.ReadLine());
-            Console.WriteLine($"{mass}"); //correct
 
             Console.WriteLine("Please enter the temperature of the gas in Celcius: ");
             temp = Convert.ToDouble(Console.ReadLine());
-
 
             numberMoles = NumberOfMoles(mass, molecularWeight);
 
             kelvin = CelsiusToKelvin(temp);
 
-            pressure = (numberMoles * r * kelvin) / vol;
-
+            pascals = (numberMoles * r * kelvin) / vol;
             
 
-            return pressure;
+            return pascals;
         }
 
 
@@ -161,15 +169,10 @@ namespace MitchellP1
 
         static double NumberOfMoles(double mass, double molecularWeight)
         {
-
-            //double numberMoles = 0.0;
-            // mass = 0.0;
-            // molecularWeight = 0.0;
-
-            Console.WriteLine($"{mass}");
-            Console.WriteLine($"{molecularWeight}");//not coming in 
+            
             double numberMoles = mass / molecularWeight;
-            Console.WriteLine("The number of moles is " + $"{numberMoles}"); //not getting my input. :(
+
+            Console.WriteLine("The number of moles is " + $"{numberMoles}"); 
 
             return numberMoles;
         }
@@ -180,17 +183,16 @@ namespace MitchellP1
         {
 
             temp = temp + 273.15;
-            Console.WriteLine("Kelvin temp is " + $"{temp}");
+            //Console.WriteLine("Kelvin temp is " + $"{temp}");
             return temp;
         }
 
 
-        private static void DisplayPressure(double pressure)
+        private static void DisplayPressure(double pascals)
         {
-            double pascals = 0.0;
             double psi = 0.0;
             
-            Console.WriteLine("The pressure of your gas in Pascals is " + $"{pressure}");
+            Console.WriteLine("The pressure of your gas in Pascals is " + $"{pascals}");
             psi = PaToPSI(pascals);
             Console.WriteLine("The pressure of your gas in psi is " + $"{psi}.");
 

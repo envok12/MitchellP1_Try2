@@ -23,7 +23,8 @@ namespace MitchellP1
 
                 string gasName = " ";
                 int countGases = 0;
-                double moleWeight = 0.0;
+                // GLENN: unused variable
+                // double moleWeight = 0.0;
                 double mass = 0.0;
                 double molecularWeight = 0.0;
                 double vol = 0.0;
@@ -39,7 +40,8 @@ namespace MitchellP1
                 Console.WriteLine("Enter the gas name you would like to use.");
                 gasName = Console.ReadLine();
 
-                string searchString = gasName;
+                // GLENN: unused variable
+                // string searchString = gasName;
                 countGases = Array.IndexOf(gasNames, gasName);
 
 
@@ -61,11 +63,14 @@ namespace MitchellP1
                 else
                 {
                     Console.WriteLine("The name you entered is not on the list.");
-                     
+
+                    // GLENN: per spec, this shouldn't return. it should reprompt, you could just do
+                    // another = "yes"
                     return;
                 }
 
             } while (another == "yes");
+            // GLENN: Be careful, use String.Equals(...), or another.Equals(...) when comparing strings.
 
             Console.WriteLine("Have a nice day. Goodbye.");
            
@@ -96,6 +101,8 @@ namespace MitchellP1
                 //Console.WriteLine(molecularWeights[i]);  //Checking mole weights print                
                 
             }
+            // GLENN: this is off by 1 (readText.Length is the number of lines in the file, which includes the header)
+            // count = readText.Length - 1
             count = readText.Length;
         }
 
@@ -109,9 +116,16 @@ namespace MitchellP1
             Console.WriteLine($"{ " First Column",-25 }\t{ "Second Column",-25}\t{ "Third Column",-25}");
             Console.WriteLine($"{" _____________",-25}\t{"______________",-25}\t{"______________",-25}");
 
+            // GLENN: you'll want to go up to countGases.
+            // gasNames.Length is 100, but we're only using countGases entries
             for (int i = 1; i < gasNames.Length - 2; i += 3)
             {
-                
+
+                // GLENN: In the above code ,the -25 specifies left justified and 25 chars wide,
+                // so if you want the output to be aligned you will want to print each first 25 chars
+                // wide. The tab is present because there is a tab in lines 113, 114. I apologize if
+                // I told you to put tabs during our 1:1.
+                // Console.WriteLine($"{gasNames[i],-25}\t{gasNames[i + 1],-25}\t{gasNames[i + 2], -25}");
                 Console.WriteLine(gasNames[i] + "\t\t\t" + gasNames[i + 1] + "\t\t\t" + gasNames[i + 2]);
             }
 
@@ -123,14 +137,28 @@ namespace MitchellP1
         {
 
             double moleWeight = 0.0;
+
+            // GLENN: You actually might want to put some of your main code in here.
+            // int i = Array.IndexOf(gasNames, gasName);
+            //
+            //
+            // if (gasNames.Contains(gasName)) // or (i != -1)
+            // {
+
             //fct looks up the name of a gas in an array and returns the mole weight the the gass in mols
             Console.WriteLine("The gas name " + $"{ gasName }, is at index {countGases}. ");
             moleWeight = molecularWeights[countGases];
             Console.WriteLine("The molecular weight of your gas is " + $"{moleWeight}.");
 
+            return moleWeight;
 
-
-            return moleWeight; 
+            // // (continued)
+            // }
+            // else
+            // {
+            //     return -1; // use -1 or some other value (like NaN) to indicate the value was not found.
+            // }
+            // Then in main, check for -1.
         }
 
 
